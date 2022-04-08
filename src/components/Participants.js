@@ -79,8 +79,8 @@ const Participants = () => {
       .post(`http://cx-difc-pinedulev2.azurewebsites.net/api/hearing`, body, {
         headers,
       })
-      .then(function ({ data }) {
-        return data;
+      .then(function ({ participants }) {
+        return participants;
       })
       .catch(function (error) {
         return error;
