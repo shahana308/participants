@@ -1,6 +1,9 @@
+/** @format */
+
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Card from "./Card";
 
 const Participants = () => {
   const [result, setResults] = useState([]);
@@ -68,19 +71,24 @@ const Participants = () => {
   };
 
   const fetchData = () => {
-    var headers = new Headers();
+    const headers = {
+      Authorization: "Basic YWRtaW46ZkdBdXQzZXRxMmdAR0V5Uw==",
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json",
+    };
 
-    headers.append("Access-Control-Allow-Origin", "*");
-    headers.append("Authorization", "Basic YWRtaW46ZkdBdXQzZXRxMmdAR0V5Uw==");
-    headers.append("Content-Type", "application/json");
+    // headers.append("Access-Control-Allow-Origin", "*");
+    // headers.append("Authorization", "Basic YWRtaW46ZkdBdXQzZXRxMmdAR0V5Uw==");
+    // headers.append("Content-Type", "application/json");
     console.log(body);
 
     return axios
       .post(`http://cx-difc-pinedulev2.azurewebsites.net/api/hearing`, body, {
-        headers,
+        headers: headers,
       })
-      .then(function ({ participants }) {
-        return participants;
+      .then(function ({ data }) {
+        console.log(data);
+        return data.participants;
       })
       .catch(function (error) {
         return error;
@@ -94,19 +102,23 @@ const Participants = () => {
   }, []);
 
   console.log(result);
-  //   const url = result.map((participant, id) =>
-  //     participant.joinURLs.url.replace(
-  //       "https://udc-difc-staging.azurewebsites.net/",
-  //       "https://udc-moj-uae-demo.azurewebsites.net/"
-  //     )
-  //   );
-
+  const urls = result.map((participant, id) =>
+    participant.joinUrls.map((url) =>
+      url.url.replace(
+        "https://udc-difc-staging.azurewebsites.net/",
+        "https://udc-moj-uae-demo.azurewebsites.net/"
+      )
+    )
+  );
+  // console.log(url);
   return (
     <div>
       {result.map((participant, id) => (
-        <ul>
-          <li>{participant.name}</li>
-          {/* <li>{url}</li> */}
+        <ul key={id}>
+          <Card>
+            <h3>{participant.name}</h3>
+            <a href={urls.map((url) => url)}>{urls.map((url) => url)}</a>
+          </Card>
         </ul>
       ))}
     </div>
